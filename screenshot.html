@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1e1e2e;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 40px;
+  }
+  .terminal {
+    background: #181825;
+    border-radius: 12px;
+    padding: 24px 28px;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #cdd6f4;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    max-width: 1000px;
+    width: 100%;
+    border: 1px solid #313244;
+  }
+  .terminal .title-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 16px; border-bottom: 1px solid #313244;
+    margin-bottom: 16px;
+  }
+  .terminal .title-bar .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .terminal .title-bar .dot.r { background: #f38ba8; }
+  .terminal .title-bar .dot.y { background: #f9e2af; }
+  .terminal .title-bar .dot.g { background: #a6e3a1; }
+  .terminal .title-bar .title { margin-left: 12px; font-size: 13px; color: #6c7086; }
+  .terminal .line { white-space: pre; }
+  .terminal .green { color: #a6e3a1; }
+  .terminal .yellow { color: #f9e2af; }
+  .terminal .red { color: #f38ba8; }
+  .terminal .dim { color: #6c7086; }
+  .terminal .cyan { color: #89dceb; }
+  .terminal .magenta { color: #f5c2e7; }
+  .terminal .bold { color: #cdd6f4; }
+  .terminal .sep { color: #45475a; }
+  .terminal .prompt { color: #a6adc8; }
+  .terminal .header { color: #f5e0dc; }
+  .terminal .json { color: #a6e3a1; }
+</style>
+</head>
+<body>
+<div class="terminal">
+  <div class="title-bar">
+    <div class="dot r"></div>
+    <div class="dot y"></div>
+    <div class="dot g"></div>
+    <span class="title">buddy-watch — Linux Memory Fragmentation Monitor (C++23)</span>
+  </div>
+
+  <div class="line prompt">  $ ./buddy-watch</div>
+  <div class="line bold">  buddy-watch — fragmentación de memoria Linux (/proc/buddyinfo)</div>
+  <div class="line dim">  snapshot 2026-08-17 05:11:04 · página 4 KiB</div>
+  <div class="line"></div>
+  <div class="line bold">  zone    free        max contig  frag    THP 2MiB</div>
+  <div class="line sep">  --------------------------------------------------</div>
+  <div class="line">  DMA     <span class="cyan">13.00 MiB  </span><span class="magenta">4.00 MiB  </span><span class="green">   0.0%  </span><span class="green">2        </span></div>
+  <div class="line">  DMA32   <span class="cyan">513.87 MiB </span><span class="magenta">2.00 MiB  </span><span class="yellow">  30.4%  </span><span class="green">2        </span></div>
+  <div class="line">  Normal  <span class="cyan">1.33 GiB   </span><span class="magenta">2.00 MiB  </span><span class="yellow">  38.7%  </span><span class="green">3        </span></div>
+  <div class="line sep">  --------------------------------------------------</div>
+  <div class="line bold">  TOTAL <span class="cyan">1.85 GiB libres</span> · frag 36.2% · contig máx 4.00 MiB · <span class="green">7 bloques THP (2 MiB)</span></div>
+  <div class="line"></div>
+  <div class="line bold">  bloques libres por orden (4 KiB · 2^orden)</div>
+  <div class="line dim">  zone    o0    o1    o2    o3    o4    o5    o6    o7    o8    o9    o10</div>
+  <div class="line">  DMA     0     0     0     0     0     0     0     0     1     2     2</div>
+  <div class="line">  DMA32   5330  2778  1752  2769  1547  894   352   88    13    2     0</div>
+  <div class="line">  Normal  <span class="yellow">24776</span> <span class="yellow">12172</span> 8447  6509  4473  2048  731   199   12    3     0</div>
+  <div class="line"></div>
+
+  <div class="line prompt">  $ ./buddy-watch --json</div>
+  <div class="line json">  {"ts":1787000000,"total_free_pages":494381,"total_free_kib":1977524,</div>
+  <div class="line json">   "fragmentation_pct":36.2,"thp_blocks":7,"max_contig_order":10,</div>
+  <div class="line json">   "zones":[{"node":0,"zone":"DMA","free_pages":3328,"blocks":[0,0,0,0,0,0,0,0,1,2,2]},</div>
+  <div class="line json">            {"node":0,"zone":"DMA32","free_pages":131552,"blocks":[5330,2778,1752,2769,1547,894,352,88,13,2,0]}]}</div>
+  <div class="line"></div>
+
+  <div class="line prompt">  $ ./buddy-watch --watch 5</div>
+  <div class="line dim">  [05:11:20]  1.86 GiB libres (Δ +0 KiB) · frag 36.8% · mín 1.86 GiB · máx frag 36.8%</div>
+  <div class="line dim">  [05:11:25]  1.86 GiB libres (Δ -4 MiB) · frag 37.0% · mín 1.85 GiB · máx frag 37.0%</div>
+  <div class="line dim">  [05:11:30]  1.85 GiB libres (Δ -12 MiB) · frag <span class="yellow">37.4%</span> · mín 1.84 GiB · máx frag <span class="yellow">37.4%</span></div>
+  <div class="line"></div>
+
+  <div class="line prompt">  $ ./buddy-watch --selftest</div>
+  <div class="line"><span class="green">  PASS</span>  parse: línea sintética completa</div>
+  <div class="line"><span class="green">  PASS</span>  lectura: /proc/buddyinfo con &gt;= 1 zona</div>
+  <div class="line"><span class="green">  PASS</span>  stats: total global == suma de zonas</div>
+  <div class="line"><span class="green">  PASS</span>  frag: todo en orden &gt;= 4 → ~0%</div>
+  <div class="line"><span class="green">  PASS</span>  frag: solo orden 0 → 100%</div>
+  <div class="line"><span class="green">  PASS</span>  THP: Σ bloques de orden 9 (2 MiB)</div>
+  <div class="line"><span class="green">  PASS</span>  JSON: claves con comillas dobles</div>
+  <div class="line"><span class="green">  PASS</span>  no-color: helpers sin códigos ANSI</div>
+  <div class="line"><span class="green">  PASS</span>  watch: delta entre snapshots correcto (100 páginas)</div>
+  <div class="line bold">   26 passed, 0 failed</div>
+  <div class="line sep">  ------------------------------------------------------------------------------</div>
+  <div class="line dim">  /proc/buddyinfo · 11 órdenes · frag% · THP 2MiB · --watch deltas · --json · --demo · 26 selftests · C++23 stdlib-only</div>
+</div>
+</body>
+</html>

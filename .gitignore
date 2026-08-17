@@ -1,0 +1,5 @@
+buddy-watch
+compile.log
+build/
+*.o
+node_modules
